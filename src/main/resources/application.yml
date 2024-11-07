@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: FoodOrdering
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/foodOrdering
+    username: root
+    password: dat03122003
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
