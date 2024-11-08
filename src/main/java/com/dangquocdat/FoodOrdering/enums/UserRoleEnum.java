@@ -1,6 +1,6 @@
 package com.dangquocdat.FoodOrdering.enums;
 
-public enum USER_ROLE {
+public enum UserRoleEnum {
 
     ROLE_CUSTOMER,
     ROLE_RESTAURANT_OWNER,

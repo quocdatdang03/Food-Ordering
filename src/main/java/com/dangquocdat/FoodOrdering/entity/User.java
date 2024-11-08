@@ -2,17 +2,16 @@ package com.dangquocdat.FoodOrdering.entity;
 
 
 import com.dangquocdat.FoodOrdering.dto.RestaurantDto;
-import com.dangquocdat.FoodOrdering.enums.USER_ROLE;
+import com.dangquocdat.FoodOrdering.enums.UserRoleEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -31,9 +30,10 @@ public class User {
 
     String email;
 
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
 
-    USER_ROLE role;
+    UserRoleEnum role = UserRoleEnum.ROLE_CUSTOMER;
 
     @JsonIgnore // whenever fetching user we don't need to include orders
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
