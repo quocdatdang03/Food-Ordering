@@ -1,6 +1,6 @@
 package com.dangquocdat.FoodOrdering.dto.user;
 
-import com.dangquocdat.FoodOrdering.dto.RestaurantDto;
+import com.dangquocdat.FoodOrdering.dto.restaurant.RestaurantFavoriteDto;
 import com.dangquocdat.FoodOrdering.entity.Address;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,6 +18,6 @@ public class UserDto {
     String fullName;
     String email;
     String role;
-    List<RestaurantDto> favorites;
+    List<RestaurantFavoriteDto> favorites;
     List<Address> addresses;
 }

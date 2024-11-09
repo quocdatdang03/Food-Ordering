@@ -1,10 +1,9 @@
 package com.dangquocdat.FoodOrdering.entity;
 
 
-import com.dangquocdat.FoodOrdering.dto.RestaurantDto;
+import com.dangquocdat.FoodOrdering.dto.restaurant.RestaurantFavoriteDto;
 import com.dangquocdat.FoodOrdering.enums.UserRoleEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -40,9 +39,9 @@ public class User {
     List<Order> orders = new ArrayList<>();
 
     // @ElementCollection : it will create secondary table (name : user_favorites and have foreign key user_id linking User table,
-    // and all fields of Restaurant Dto)
+    // and all fields of RestaurantFavoriteDto)
     @ElementCollection // store a collection of simple values related to current entity without creating a separate entity
-    List<RestaurantDto> favorites = new ArrayList(); // list of favorites restaurant
+    List<RestaurantFavoriteDto> favorites = new ArrayList(); // list of favorites restaurant
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     List<Address> addresses = new ArrayList<>();

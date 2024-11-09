@@ -42,6 +42,34 @@ public class AdminRestaurantController {
         return ResponseEntity.ok(restaurantResponse);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteRestaurant(
+            @PathVariable("id") Long restaurantId
+    ) {
+
+       return ResponseEntity.ok(restaurantService.deleteRestaurant(restaurantId));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<RestaurantResponse> updateRestaurantStatus(
+            @PathVariable("id") Long restaurantId,
+            @RequestHeader("Authorization") String jwtToken
+    ) {
+        UserDto userDto = getUserDtoByJwtToken(jwtToken);
+
+        return ResponseEntity.ok(restaurantService.updateRestaurantStatus(restaurantId));
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<RestaurantResponse> getRestaurantByOwnerId(
+            @RequestHeader("Authorization") String jwtToken
+    ) {
+
+        UserDto userDto = getUserDtoByJwtToken(jwtToken);
+
+        return ResponseEntity.ok(restaurantService.getRestaurantByOwnerId(userDto.getId()));
+    }
+
     private UserDto getUserDtoByJwtToken(String jwtToken) {
 
         String onlyToken = jwtToken.substring(7);

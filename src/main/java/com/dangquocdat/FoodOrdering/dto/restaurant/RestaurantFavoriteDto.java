@@ -1,4 +1,4 @@
-package com.dangquocdat.FoodOrdering.dto;
+package com.dangquocdat.FoodOrdering.dto.restaurant;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -11,9 +11,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Embeddable // indicate that can be embedded to User entity
-public class RestaurantDto {
+public class RestaurantFavoriteDto {
 
     Long id;
 
