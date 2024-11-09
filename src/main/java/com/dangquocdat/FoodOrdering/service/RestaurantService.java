@@ -9,10 +9,13 @@ import java.util.List;
 
 public interface RestaurantService {
 
+    // ADMIN
     RestaurantResponse createRestaurant(RestaurantCreationRequest restaurantRequest, UserDto owner);
 
+    // ADMIN
     RestaurantResponse updateRestaurant(Long restaurantId, RestaurantCreationRequest restaurantRequest);
 
+    // ADMIN
     String deleteRestaurant(Long restaurantId);
 
     List<RestaurantResponse> getAllRestaurants();
@@ -21,9 +24,11 @@ public interface RestaurantService {
 
     RestaurantResponse getRestaurantById(Long restaurantId);
 
+    // ADMIN
     RestaurantResponse getRestaurantByOwnerId(Long ownerId);
 
     RestaurantFavoriteDto addToFavorites(Long restaurantId, UserDto user);
 
+    // ADMIN
     RestaurantResponse updateRestaurantStatus(Long restaurantId);
 }
