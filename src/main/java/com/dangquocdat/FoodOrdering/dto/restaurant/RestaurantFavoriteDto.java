@@ -18,12 +18,15 @@ public class RestaurantFavoriteDto {
 
     Long id;
 
-    String title;
+    String name;
 
     String description;
 
     @Column(length = 1000)
     List<String> images;
+
+    boolean open;
+
 
 
 }

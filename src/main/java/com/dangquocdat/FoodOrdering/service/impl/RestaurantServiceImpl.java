@@ -142,9 +142,10 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         RestaurantFavoriteDto restaurantFavoriteDto = new RestaurantFavoriteDto();
         restaurantFavoriteDto.setId(restaurant.getId());
-        restaurantFavoriteDto.setTitle(restaurant.getName());
+        restaurantFavoriteDto.setName(restaurant.getName());
         restaurantFavoriteDto.setDescription(restaurant.getDescription());
         restaurantFavoriteDto.setImages(restaurant.getImages());
+        restaurantFavoriteDto.setOpen(restaurant.isOpen());
 
         // FE side will click toggle btn to remove or add restaurant to favorite list
         if(userDto.getFavorites().contains(restaurantFavoriteDto))
@@ -182,9 +183,9 @@ public class RestaurantServiceImpl implements RestaurantService {
         // toggle
         restaurant.setOpen(!restaurant.isOpen());
 
-        restaurantRepository.save(restaurant);
+        Restaurant updatedRestaurant = restaurantRepository.save(restaurant);
 
-        return modelMapper.map(restaurant, RestaurantResponse.class);
+        return modelMapper.map(updatedRestaurant, RestaurantResponse.class);
 
     }
 

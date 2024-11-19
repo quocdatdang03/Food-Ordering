@@ -46,6 +46,8 @@ public class FoodServiceImpl implements FoodService {
 
         Food savedFood = foodRepository.save(food);
 
+        // restaurant.getFoods().add(savedFood);
+
         FoodResponse foodResponse = modelMapper.map(savedFood, FoodResponse.class);
         foodResponse.setRestaurantId(foodCreationRequest.getRestaurantId());
 
