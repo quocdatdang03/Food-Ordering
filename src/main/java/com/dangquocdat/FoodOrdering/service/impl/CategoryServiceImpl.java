@@ -1,6 +1,6 @@
 package com.dangquocdat.FoodOrdering.service.impl;
 
-import com.dangquocdat.FoodOrdering.dto.category.CategoryCreationRequest;
+import com.dangquocdat.FoodOrdering.dto.category.request.CategoryCreationRequest;
 import com.dangquocdat.FoodOrdering.dto.category.CategoryDto;
 import com.dangquocdat.FoodOrdering.entity.Category;
 import com.dangquocdat.FoodOrdering.entity.Restaurant;

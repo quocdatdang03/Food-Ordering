@@ -1,10 +1,13 @@
 package com.dangquocdat.FoodOrdering.service.impl;
 
 import com.dangquocdat.FoodOrdering.dto.food.request.FoodCreationRequest;
-import com.dangquocdat.FoodOrdering.dto.food.request.FoodResponse;
+import com.dangquocdat.FoodOrdering.dto.food.response.FoodResponse;
+import com.dangquocdat.FoodOrdering.entity.Category;
 import com.dangquocdat.FoodOrdering.entity.Food;
+import com.dangquocdat.FoodOrdering.entity.IngredientsItem;
 import com.dangquocdat.FoodOrdering.entity.Restaurant;
 import com.dangquocdat.FoodOrdering.exception.ResourceNotFoundException;
+import com.dangquocdat.FoodOrdering.repository.CategoryRepository;
 import com.dangquocdat.FoodOrdering.repository.FoodRepository;
 import com.dangquocdat.FoodOrdering.repository.RestaurantRepository;
 import com.dangquocdat.FoodOrdering.service.FoodService;
@@ -23,6 +26,7 @@ public class FoodServiceImpl implements FoodService {
 
     private final FoodRepository foodRepository;
     private final RestaurantRepository restaurantRepository;
+    private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -30,6 +34,10 @@ public class FoodServiceImpl implements FoodService {
 
         Restaurant restaurant = restaurantRepository.findById(foodCreationRequest.getRestaurantId())
                                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant is not exists with given id: "+foodCreationRequest.getRestaurantId()));
+
+        // food Category
+        Category category = categoryRepository.findById(foodCreationRequest.getCategoryId())
+                                .orElseThrow(() -> new ResourceNotFoundException("Category is not exists with given id: "+foodCreationRequest.getCategoryId()));
 
         Food food = new Food();
         food.setName(foodCreationRequest.getName());
@@ -39,9 +47,15 @@ public class FoodServiceImpl implements FoodService {
         food.setAvailable(foodCreationRequest.isAvailable());
         food.setVegetarian(food.isVegetarian());
         food.setSeasonal(food.isSeasonal());
-        food.setCategory(foodCreationRequest.getCategory());
+        food.setCategory(category);
         food.setRestaurant(restaurant);
-        food.setIngredientsItems(food.getIngredientsItems());
+
+        List<IngredientsItem> ingredientsItems = foodCreationRequest
+                                                    .getIngredients()
+                                                        .stream().map((item) -> modelMapper.map(item, IngredientsItem.class))
+                                                            .collect(Collectors.toList());
+
+        food.setIngredientsItems(ingredientsItems);
         food.setCreationDate(new Date());
 
         Food savedFood = foodRepository.save(food);

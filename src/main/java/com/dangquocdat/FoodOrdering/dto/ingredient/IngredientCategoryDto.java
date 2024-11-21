@@ -1,6 +1,7 @@
 package com.dangquocdat.FoodOrdering.dto.ingredient;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.util.*;
@@ -14,5 +15,4 @@ public class IngredientCategoryDto {
 
     Long id;
     String name;
-    List<IngredientItemDto> ingredients;
 }

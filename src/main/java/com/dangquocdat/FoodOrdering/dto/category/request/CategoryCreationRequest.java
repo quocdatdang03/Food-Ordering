@@ -1,4 +1,4 @@
-package com.dangquocdat.FoodOrdering.dto.category;
+package com.dangquocdat.FoodOrdering.dto.category.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

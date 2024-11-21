@@ -1,7 +1,7 @@
 package com.dangquocdat.FoodOrdering.service;
 
 import com.dangquocdat.FoodOrdering.dto.food.request.FoodCreationRequest;
-import com.dangquocdat.FoodOrdering.dto.food.request.FoodResponse;
+import com.dangquocdat.FoodOrdering.dto.food.response.FoodResponse;
 
 import java.util.List;
 

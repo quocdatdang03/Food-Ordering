@@ -1,6 +1,6 @@
 package com.dangquocdat.FoodOrdering.service;
 
-import com.dangquocdat.FoodOrdering.dto.category.CategoryCreationRequest;
+import com.dangquocdat.FoodOrdering.dto.category.request.CategoryCreationRequest;
 import com.dangquocdat.FoodOrdering.dto.category.CategoryDto;
 
 import java.util.List;

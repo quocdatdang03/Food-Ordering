@@ -1,7 +1,7 @@
 package com.dangquocdat.FoodOrdering.controller;
 
 import com.dangquocdat.FoodOrdering.dto.food.request.FoodCreationRequest;
-import com.dangquocdat.FoodOrdering.dto.food.request.FoodResponse;
+import com.dangquocdat.FoodOrdering.dto.food.response.FoodResponse;
 import com.dangquocdat.FoodOrdering.dto.user.UserDto;
 import com.dangquocdat.FoodOrdering.service.FoodService;
 import com.dangquocdat.FoodOrdering.service.UserService;

@@ -13,11 +13,41 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ingredients")
+@RequestMapping("/api/admin/ingredients")
 @RequiredArgsConstructor
-public class IngredientController {
+public class AdminIngredientController {
 
     private final IngredientService ingredientService;
+
+    @PostMapping("/category")
+    public ResponseEntity<IngredientCategoryDto> createIngredientCategory(
+            @RequestBody IngredientCategoryCreationRequest ingredientCategoryCreationRequest
+    )
+    {
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ingredientService.createIngredientCategory(ingredientCategoryCreationRequest));
+    }
+
+    @PostMapping
+    public ResponseEntity<IngredientItemDto> createIngredientItem(
+            @RequestBody IngredientItemCreationRequest ingredientItemCreationRequest
+    )
+    {
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ingredientService.createIngredientItem(ingredientItemCreationRequest));
+    }
+
+    @PatchMapping("/{id}/stock")
+    public ResponseEntity<IngredientItemDto> updateStock(
+            @PathVariable("id") Long ingredientItemId
+    ) {
+
+        return ResponseEntity.ok(ingredientService.updateStock(ingredientItemId));
+    }
 
     @GetMapping("/category/{id}")
     public ResponseEntity<IngredientCategoryDto> getIngredientCategoryById(

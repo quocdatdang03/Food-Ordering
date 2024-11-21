@@ -1,7 +1,7 @@
-package com.dangquocdat.FoodOrdering.dto.food.request;
+package com.dangquocdat.FoodOrdering.dto.food.response;
 
+import com.dangquocdat.FoodOrdering.dto.ingredient.IngredientItemDto;
 import com.dangquocdat.FoodOrdering.entity.Category;
-import com.dangquocdat.FoodOrdering.entity.IngredientsItem;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.util.*;
@@ -23,5 +23,5 @@ public class FoodResponse {
     boolean isSeasonal;
     Category category;
     Long restaurantId;
-    List<IngredientsItem> ingredients;
+    List<IngredientItemDto> ingredients;
 }

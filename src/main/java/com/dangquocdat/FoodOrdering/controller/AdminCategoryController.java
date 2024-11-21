@@ -1,6 +1,6 @@
 package com.dangquocdat.FoodOrdering.controller;
 
-import com.dangquocdat.FoodOrdering.dto.category.CategoryCreationRequest;
+import com.dangquocdat.FoodOrdering.dto.category.request.CategoryCreationRequest;
 import com.dangquocdat.FoodOrdering.dto.category.CategoryDto;
 import com.dangquocdat.FoodOrdering.dto.restaurant.response.RestaurantResponse;
 import com.dangquocdat.FoodOrdering.dto.user.UserDto;

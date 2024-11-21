@@ -1,7 +1,7 @@
 package com.dangquocdat.FoodOrdering.controller;
 
 
-import com.dangquocdat.FoodOrdering.dto.food.request.FoodResponse;
+import com.dangquocdat.FoodOrdering.dto.food.response.FoodResponse;
 import com.dangquocdat.FoodOrdering.dto.user.UserDto;
 import com.dangquocdat.FoodOrdering.service.FoodService;
 import com.dangquocdat.FoodOrdering.service.UserService;
@@ -33,11 +33,11 @@ public class FoodController {
 
     @GetMapping("/restaurant/{restaurantId}")
     public ResponseEntity<List<FoodResponse>> filterFoodOfRestaurant(
-            @RequestHeader("Authorization") String jwtToken,
-            @PathVariable("restaurantId") Long restaurantId,
-            @RequestParam("isVegetarian") boolean isVegetarian,
-            @RequestParam("isNonVegetarian") boolean isNonVegetarian,
-            @RequestParam("isSeasonal") boolean isSeasonal,
+            @RequestHeader(value = "Authorization", required = false) String jwtToken,
+            @PathVariable(value = "restaurantId", required = false) Long restaurantId,
+            @RequestParam(value = "isVegetarian", required = false) boolean isVegetarian,
+            @RequestParam(value = "isNonVegetarian", required = false) boolean isNonVegetarian,
+            @RequestParam(value = "isSeasonal", required = false) boolean isSeasonal,
             @RequestParam(value="foodCategory", required = false) String foodCategory
     )
     {
