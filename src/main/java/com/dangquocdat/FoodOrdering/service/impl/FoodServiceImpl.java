@@ -155,7 +155,7 @@ public class FoodServiceImpl implements FoodService {
         if(isSeasonal)
             foods = filterBySeasonal(isSeasonal, foods);
 
-        if(foodCategory!=null && !foodCategory.isEmpty())
+        if(foodCategory!=null && !foodCategory.isEmpty() && !foodCategory.equals("all"))
             foods = filterByFoodCategory(foodCategory, foods);
 
         return foods.stream().map(food -> {
