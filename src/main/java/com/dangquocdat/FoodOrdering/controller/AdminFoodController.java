@@ -31,6 +31,18 @@ public class AdminFoodController {
 
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<FoodResponse> updateFood(
+            @RequestHeader("Authorization") String jwtToken,
+            @PathVariable("id") Long foodId,
+            @RequestBody FoodCreationRequest foodCreationRequest
+    ) {
+
+        UserDto userDto = getUserDtoByJwtToken(jwtToken);
+
+        return ResponseEntity.ok(foodService.updateFood(foodId, foodCreationRequest));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteFood(
             @RequestHeader("Authorization") String jwtToken,

@@ -4,6 +4,7 @@ import com.dangquocdat.FoodOrdering.dto.category.CategoryDto;
 import com.dangquocdat.FoodOrdering.dto.ingredient.IngredientItemDto;
 import com.dangquocdat.FoodOrdering.entity.Category;
 import com.dangquocdat.FoodOrdering.entity.IngredientsItem;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.util.*;
@@ -20,7 +21,11 @@ public class FoodCreationRequest {
     double price;
     List<String> images;
     boolean available = true;
+
+    @JsonProperty("isVegetarian")
     boolean isVegetarian;
+
+    @JsonProperty("isSeasonal")
     boolean isSeasonal;
     Long categoryId;
     Long restaurantId;

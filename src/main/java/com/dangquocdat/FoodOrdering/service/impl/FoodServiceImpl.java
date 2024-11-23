@@ -68,6 +68,60 @@ public class FoodServiceImpl implements FoodService {
         return foodResponse;
     }
 
+    @Override
+    public FoodResponse updateFood(Long foodId, FoodCreationRequest foodCreationRequest) {
+
+        Food foodFromDB = foodRepository.findById(foodId)
+                                .orElseThrow(() -> new ResourceNotFoundException("Food is not exists with given id: "+foodId));
+
+        if(foodCreationRequest.getName()!=null)
+            foodFromDB.setName(foodCreationRequest.getName());
+
+        if(foodCreationRequest.getDescription()!=null)
+            foodFromDB.setDescription(foodCreationRequest.getDescription());
+
+        if(foodCreationRequest.getPrice()>0)
+            foodFromDB.setPrice(foodCreationRequest.getPrice());
+
+        if(foodCreationRequest.getImages()!=null)
+            foodFromDB.setImages(foodCreationRequest.getImages());
+
+        if(foodCreationRequest.getRestaurantId()!=null){
+            Restaurant restaurant = restaurantRepository.findById(foodCreationRequest.getRestaurantId())
+                                            .orElseThrow(() -> new ResourceNotFoundException("Restaurant is not exists with given id: "+foodCreationRequest.getRestaurantId()));
+
+            foodFromDB.setRestaurant(restaurant);
+        }
+
+        if(foodCreationRequest.getCategoryId()!=null)
+        {
+            Category category = categoryRepository.findById(foodCreationRequest.getCategoryId())
+                                        .orElseThrow(() -> new ResourceNotFoundException("Category is not exists with given id:" +foodCreationRequest.getCategoryId()));
+
+            foodFromDB.setCategory(category);
+        }
+
+        if(foodCreationRequest.getIngredients()!=null){
+            List<IngredientsItem> ingredientsItems = foodCreationRequest.getIngredients().stream()
+                                                            .map((item) -> modelMapper.map(item, IngredientsItem.class))
+                                                                .collect(Collectors.toList());
+
+            foodFromDB.setIngredientsItems(ingredientsItems);
+        }
+
+        foodFromDB.setAvailable(foodCreationRequest.isAvailable());
+        foodFromDB.setVegetarian(foodCreationRequest.isVegetarian());
+        foodFromDB.setSeasonal(foodCreationRequest.isSeasonal());
+
+        // save to DB
+        Food updatedFood = foodRepository.save(foodFromDB);
+
+        FoodResponse foodResponse = modelMapper.map(updatedFood, FoodResponse.class);
+        foodResponse.setRestaurantId(updatedFood.getRestaurant().getId());
+
+        return foodResponse;
+    }
+
     // This food will appear in DB but depend on any restaurants
     @Override
     public String deleteFoodFromRestaurant(Long foodId) {

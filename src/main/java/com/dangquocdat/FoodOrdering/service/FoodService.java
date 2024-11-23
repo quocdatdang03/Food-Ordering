@@ -11,6 +11,9 @@ public interface FoodService {
     FoodResponse createFood(FoodCreationRequest foodCreationRequest);
 
     // ADMIN
+    FoodResponse updateFood(Long foodId, FoodCreationRequest foodCreationRequest);
+
+    // ADMIN
     String deleteFoodFromRestaurant(Long foodId);
 
     List<FoodResponse> filterRestaurantsFood(
