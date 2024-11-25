@@ -71,8 +71,9 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                                 .orElseThrow(() -> new ResourceNotFoundException("CartItem is not exists with given id: "+cartItemId));
 
-        cartItem.setQuantity(quantity);
-        cartItem.setTotalPrice(cartItem.getFood().getPrice()*quantity);
+        int newQuantity = cartItem.getQuantity()+quantity;
+        cartItem.setQuantity(newQuantity);
+        cartItem.setTotalPrice(cartItem.getFood().getPrice()*newQuantity);
 
         // save cartItem to DB:
         CartItem savedCartItem = cartItemRepository.save(cartItem);

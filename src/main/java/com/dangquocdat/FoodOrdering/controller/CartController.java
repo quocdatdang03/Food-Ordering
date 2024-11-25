@@ -43,7 +43,7 @@ public class CartController {
                     .body(cartService.addItemToCart(cartItemAdditionRequest, userDto));
     }
 
-    @PutMapping("/cartItem")
+    @PutMapping("/item")
     public ResponseEntity<CartItemDto> updateCartItemQuantity(
             @RequestHeader("Authorization") String jwtToken,
             @RequestBody CartItemUpdateRequest cartItemUpdateRequest
@@ -54,7 +54,7 @@ public class CartController {
         return ResponseEntity.ok(cartService.updateCartItemQuantity(cartItemUpdateRequest.getId(), cartItemUpdateRequest.getQuantity()));
     }
 
-    @DeleteMapping("cart-item/{id}")
+    @DeleteMapping("/item/{id}")
     public ResponseEntity<CartDto> removeItemFromCart(
             @RequestHeader("Authorization") String jwtToken,
             @PathVariable("id") Long cartItemId
