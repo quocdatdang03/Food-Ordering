@@ -12,6 +12,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name="foods")
 public class Food {
@@ -48,6 +49,7 @@ public class Food {
 
     @ManyToMany
     List<IngredientsItem> ingredientsItems = new ArrayList<>();
+
 
 
 }

@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name="cart_items")
 public class CartItem {
@@ -34,6 +35,6 @@ public class CartItem {
 
     List<String> ingredients;
 
-    Long totalPrice;
+    double totalPrice;
 
 }
