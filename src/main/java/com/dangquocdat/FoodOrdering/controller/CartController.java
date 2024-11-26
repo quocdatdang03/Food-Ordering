@@ -51,7 +51,7 @@ public class CartController {
 
         UserDto userDto = getUserDtoByJwtToken(jwtToken);
 
-        return ResponseEntity.ok(cartService.updateCartItemQuantity(cartItemUpdateRequest.getId(), cartItemUpdateRequest.getQuantity()));
+        return ResponseEntity.ok(cartService.updateCartItemQuantity(cartItemUpdateRequest.getId(), cartItemUpdateRequest.getQuantity(), userDto));
     }
 
     @DeleteMapping("/item/{id}")

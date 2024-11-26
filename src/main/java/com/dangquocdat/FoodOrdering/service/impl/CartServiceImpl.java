@@ -41,7 +41,7 @@ public class CartServiceImpl implements CartService {
         for(CartItem cartItem : cart.getCartItems()) {
             if(cartItem.getFood().equals(food))
             {
-                return updateCartItemQuantity(cartItem.getId(), request.getQuantity());
+                return updateCartItemQuantity(cartItem.getId(), request.getQuantity(), userDto);
             }
         }
 
@@ -61,12 +61,19 @@ public class CartServiceImpl implements CartService {
 
         cart.getCartItems().add(savedCartItem);
 
+        // save cart total price
+        double cartTotalPrice = calculateCartTotalPrice(cart);
+        cart.setTotalPrice(cartTotalPrice);
+        cartRepository.save(cart);
 
         return cartItemDto;
     }
 
     @Override
-    public CartItemDto updateCartItemQuantity(Long cartItemId, int quantity) {
+    public CartItemDto updateCartItemQuantity(Long cartItemId, int quantity, UserDto userDto) {
+
+        Cart cart = cartRepository.findByCustomerId(userDto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cart is not exists with given customer id: "+userDto.getId()));
 
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                                 .orElseThrow(() -> new ResourceNotFoundException("CartItem is not exists with given id: "+cartItemId));
@@ -80,6 +87,12 @@ public class CartServiceImpl implements CartService {
 
         CartItemDto cartItemDto = modelMapper.map(savedCartItem, CartItemDto.class);
         cartItemDto.setCartId(savedCartItem.getCart().getId());
+
+        // save cart total price
+        double cartTotalPrice = calculateCartTotalPrice(cart);
+        cart.setTotalPrice(cartTotalPrice);
+        cartRepository.save(cart);
+
 
         return cartItemDto;
     }
@@ -100,16 +113,21 @@ public class CartServiceImpl implements CartService {
         CartDto cartDto = modelMapper.map(savedCart, CartDto.class);
         cartDto.setCustomerId(userDto.getId());
 
+        // save cart total price
+        double cartTotalPrice = calculateCartTotalPrice(cart);
+        cart.setTotalPrice(cartTotalPrice);
+        cartRepository.save(cart);
+
         return cartDto;
     }
 
     @Override
-    public double calculateCartTotalPrice(CartDto cartDto) {
+    public double calculateCartTotalPrice(Cart cart) {
 
         double cartTotalPrice = 0;
-        List<CartItemDto> cartItemDtos = cartDto.getCartItems();
+        List<CartItem> cartItems = cart.getCartItems();
 
-        for(CartItemDto item : cartItemDtos) {
+        for(CartItem item : cartItems) {
             cartTotalPrice += item.getTotalPrice();
         }
 
@@ -136,6 +154,12 @@ public class CartServiceImpl implements CartService {
 
         CartDto cartDto = modelMapper.map(cart, CartDto.class);
         cartDto.setCustomerId(cart.getCustomer().getId());
+
+
+        // save cart total price
+        double cartTotalPrice = calculateCartTotalPrice(cart);
+        cart.setTotalPrice(cartTotalPrice);
+        cartRepository.save(cart);
 
         return cartDto;
     }

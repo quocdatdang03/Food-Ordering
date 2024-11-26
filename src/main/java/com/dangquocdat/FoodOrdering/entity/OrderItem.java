@@ -26,7 +26,7 @@ public class OrderItem {
 
     int quantity;
 
-    Long totalPrice;
+    double totalPrice;
 
     List<String> ingredients;
 

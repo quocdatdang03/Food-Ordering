@@ -17,7 +17,7 @@ public class CartDto {
 
     Long customerId;
 
-    Long totalPrice;
+    double totalPrice;
 
     List<CartItemDto> cartItems;
 }
