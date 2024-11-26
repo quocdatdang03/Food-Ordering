@@ -22,7 +22,7 @@ public class AdminOrderController {
     public ResponseEntity<List<OrderResponse>> getRestaurantOrdersHistory(
             @RequestHeader("Authorization") String jwtToken,
             @PathVariable("restaurantId") Long restaurantId,
-            @RequestParam(value = "orderStatus", required = false) String orderStatus
+            @RequestParam(value = "order_status", required = false) String orderStatus
     ) {
 
         UserDto userDto = getUserDtoByJwtToken(jwtToken);

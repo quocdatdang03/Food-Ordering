@@ -60,8 +60,12 @@ public class OrderServiceImpl implements OrderService {
         order.setDeliveryAddress(address);
         order.setTotalPrice(cart.getTotalPrice());
         order.setRestaurant(restaurant);
+        order.setCreatedDate(new Date());
 
+        // save order to db
+        Order savedOrder = orderRepository.save(order);
 
+        // create order items and save to DB
         List<OrderItem> orderItems = new ArrayList<>();
         for(CartItem cartItem : cart.getCartItems())
         {
@@ -70,17 +74,17 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setTotalPrice(cartItem.getTotalPrice());
             orderItem.setIngredients(cartItem.getIngredients());
+            orderItem.setOrder(savedOrder);
 
             OrderItem savedOrderItem = orderItemRepository.save(orderItem);
 
             orderItems.add(savedOrderItem);
         }
 
-        order.setOrderItems(orderItems);
-        order.setTotalItem(orderItems.size());
-        order.setCreatedDate(new Date());
+        savedOrder.setOrderItems(orderItems);
+        savedOrder.setTotalItem(orderItems.size());
 
-        Order savedOrder = orderRepository.save(order);
+        orderRepository.save(savedOrder);
 
         restaurant.getOrders().add(savedOrder);
         customer.getOrders().add(savedOrder);
