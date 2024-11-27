@@ -1,6 +1,7 @@
 package com.dangquocdat.FoodOrdering.service.impl;
 
 import com.dangquocdat.FoodOrdering.dto.order.request.OrderRequest;
+import com.dangquocdat.FoodOrdering.dto.order.response.OrderItemResponse;
 import com.dangquocdat.FoodOrdering.dto.order.response.OrderResponse;
 import com.dangquocdat.FoodOrdering.dto.user.UserDto;
 import com.dangquocdat.FoodOrdering.entity.*;
@@ -89,11 +90,7 @@ public class OrderServiceImpl implements OrderService {
         restaurant.getOrders().add(savedOrder);
         customer.getOrders().add(savedOrder);
 
-        OrderResponse orderResponse = modelMapper.map(savedOrder, OrderResponse.class);
-        orderResponse.setCustomerId(savedOrder.getCustomer().getId());
-        orderResponse.setRestaurantId(savedOrder.getRestaurant().getId());
-
-        return orderResponse;
+        return getOrderResponse(savedOrder);
     }
 
     @Override
@@ -112,11 +109,7 @@ public class OrderServiceImpl implements OrderService {
 
             Order savedOrder = orderRepository.save(order);
 
-            OrderResponse orderResponse = modelMapper.map(savedOrder, OrderResponse.class);
-            orderResponse.setCustomerId(savedOrder.getCustomer().getId());
-            orderResponse.setRestaurantId(savedOrder.getRestaurant().getId());
-
-            return orderResponse;
+            return getOrderResponse(savedOrder);
         }
 
         throw new ApiException(HttpStatus.BAD_REQUEST, "Order status is invalid!");
@@ -135,13 +128,11 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = orderRepository.findByCustomerId(customerId)
                          .orElseThrow(() -> new ResourceNotFoundException("Order is not exists with given customer id: " + customerId));
 
-        return orders.stream().map((order) -> {
-            OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
-            orderResponse.setCustomerId(order.getCustomer().getId());
-            orderResponse.setRestaurantId(order.getRestaurant().getId());
-
-            return orderResponse;
+        List<OrderResponse> orderResponses =  orders.stream().map((order) -> {
+            return getOrderResponse(order);
         }).collect(Collectors.toList());
+
+        return orderResponses;
 
     }
 
@@ -159,11 +150,25 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return orders.stream().map((order) -> {
-            OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
-            orderResponse.setCustomerId(order.getCustomer().getId());
-            orderResponse.setRestaurantId(order.getRestaurant().getId());
-
-            return orderResponse;
+            return getOrderResponse(order);
         }).collect(Collectors.toList());
+    }
+
+    private OrderResponse getOrderResponse(Order order) {
+        OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
+        orderResponse.setCustomerId(order.getCustomer().getId());
+        orderResponse.setRestaurantId(order.getRestaurant().getId());
+        List<OrderItemResponse> orderItemResponses = order.getOrderItems().stream().map((item) -> {
+
+            OrderItemResponse orderItemResponse = modelMapper.map(item, OrderItemResponse.class);
+            orderItemResponse.setFoodId(item.getFood().getId());
+            orderItemResponse.setOrderId(item.getOrder().getId());
+
+            return orderItemResponse;
+        }).collect(Collectors.toList());
+
+        orderResponse.setOrderItems(orderItemResponses);
+
+        return orderResponse;
     }
 }

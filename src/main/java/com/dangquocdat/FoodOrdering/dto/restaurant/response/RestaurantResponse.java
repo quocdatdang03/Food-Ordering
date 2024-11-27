@@ -1,6 +1,7 @@
 package com.dangquocdat.FoodOrdering.dto.restaurant.response;
 
 import com.dangquocdat.FoodOrdering.dto.food.response.FoodResponse;
+import com.dangquocdat.FoodOrdering.dto.order.response.OrderResponse;
 import com.dangquocdat.FoodOrdering.dto.user.UserDto;
 import com.dangquocdat.FoodOrdering.entity.*;
 import lombok.*;
@@ -29,5 +30,5 @@ public class RestaurantResponse {
     boolean open;
     UserDto owner;
     List<FoodResponse> foods = new ArrayList<>();
-    List<Order> orders = new ArrayList<>();
+    List<OrderResponse> orders = new ArrayList<>();
 }

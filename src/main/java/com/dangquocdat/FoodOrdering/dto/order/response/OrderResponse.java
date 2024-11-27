@@ -23,5 +23,5 @@ public class OrderResponse {
     Address deliveryAddress;
     Long customerId;
     Long restaurantId;
-    List<OrderItem> orderItems;
+    List<OrderItemResponse> orderItems;
 }

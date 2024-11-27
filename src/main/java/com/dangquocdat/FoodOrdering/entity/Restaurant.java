@@ -53,6 +53,7 @@ public class Restaurant {
     @JoinColumn(name = "restaurant_address_id")
     Address address;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Order> orders = new ArrayList<>();
 }

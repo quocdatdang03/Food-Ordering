@@ -1,6 +1,7 @@
 package com.dangquocdat.FoodOrdering.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -30,6 +31,7 @@ public class OrderItem {
 
     List<String> ingredients;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="order_id")
     Order order;
