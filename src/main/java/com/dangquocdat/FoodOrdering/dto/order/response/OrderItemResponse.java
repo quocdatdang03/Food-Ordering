@@ -1,6 +1,7 @@
 package com.dangquocdat.FoodOrdering.dto.order.response;
 
 
+import com.dangquocdat.FoodOrdering.dto.food.response.FoodResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,7 +15,7 @@ import java.util.List;
 public class OrderItemResponse {
 
     Long id;
-    Long foodId;
+    FoodResponse food;
     Long orderId;
     int quantity;
     double totalPrice;

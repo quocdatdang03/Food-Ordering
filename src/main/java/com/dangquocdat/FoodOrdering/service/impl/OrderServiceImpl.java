@@ -161,7 +161,6 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItemResponse> orderItemResponses = order.getOrderItems().stream().map((item) -> {
 
             OrderItemResponse orderItemResponse = modelMapper.map(item, OrderItemResponse.class);
-            orderItemResponse.setFoodId(item.getFood().getId());
             orderItemResponse.setOrderId(item.getOrder().getId());
 
             return orderItemResponse;
