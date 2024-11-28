@@ -17,3 +17,8 @@ app:
   jwt-expiration-milliseconds: 86400000 # 1 day
 server:
   port: 7979
+
+# config stripe payment
+stripe:
+  api:
+    secret-key: sk_test_51QQ3XIE35ULqi6yGKYY9vKY1BFNdaOzqxv1njWJcJAjI7nQXbnSjh8asxPaHVasfYcqHbzof2UpWe6t8uvWReHvF005gOuqsA3
