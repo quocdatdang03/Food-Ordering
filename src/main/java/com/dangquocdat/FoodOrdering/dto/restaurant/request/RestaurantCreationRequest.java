@@ -21,4 +21,5 @@ public class RestaurantCreationRequest {
     String openingHours;
     List<String> images;
     Address address;
+    Boolean open;
 }

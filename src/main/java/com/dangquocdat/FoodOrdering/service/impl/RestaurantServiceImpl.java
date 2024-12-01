@@ -78,6 +78,10 @@ public class RestaurantServiceImpl implements RestaurantService {
         if(restaurantRequest.getAddress()!=null)
             restaurantFromDB.setAddress(restaurantRequest.getAddress());
 
+        if(restaurantRequest.getOpen()!=null) {
+            restaurantFromDB.setOpen(restaurantRequest.getOpen());
+        }
+
         Restaurant updatedRestaurant = restaurantRepository.save(restaurantFromDB);
 
 

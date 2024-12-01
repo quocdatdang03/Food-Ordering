@@ -16,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,6 +65,7 @@ public class FoodServiceImpl implements FoodService {
 
         FoodResponse foodResponse = modelMapper.map(savedFood, FoodResponse.class);
         foodResponse.setRestaurantId(foodCreationRequest.getRestaurantId());
+        foodResponse.setRestaurantName(food.getRestaurant().getName());
 
         return foodResponse;
     }
@@ -118,6 +120,7 @@ public class FoodServiceImpl implements FoodService {
 
         FoodResponse foodResponse = modelMapper.map(updatedFood, FoodResponse.class);
         foodResponse.setRestaurantId(updatedFood.getRestaurant().getId());
+        foodResponse.setRestaurantName(updatedFood.getRestaurant().getName());
 
         return foodResponse;
     }
@@ -161,6 +164,7 @@ public class FoodServiceImpl implements FoodService {
         return foods.stream().map(food -> {
             FoodResponse foodResponse = modelMapper.map(food, FoodResponse.class);
             foodResponse.setRestaurantId(food.getRestaurant().getId());
+            foodResponse.setRestaurantName(food.getRestaurant().getName());
 
             return foodResponse;
         }).collect(Collectors.toList());
@@ -195,11 +199,15 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public List<FoodResponse> searchFood(String keyword) {
 
+        if(keyword.isEmpty())
+            return new ArrayList<FoodResponse>();
+
         List<Food> foods = foodRepository.searchFoodByKeyword(keyword);
 
         return foods.stream().map(food -> {
             FoodResponse foodResponse = modelMapper.map(food, FoodResponse.class);
             foodResponse.setRestaurantId(food.getRestaurant().getId());
+            foodResponse.setRestaurantName(food.getRestaurant().getName());
 
             return foodResponse;
         }).collect(Collectors.toList());
@@ -213,6 +221,7 @@ public class FoodServiceImpl implements FoodService {
 
         FoodResponse foodResponse = modelMapper.map(food, FoodResponse.class);
         foodResponse.setRestaurantId(food.getRestaurant().getId());
+        foodResponse.setRestaurantName(food.getRestaurant().getName());
 
         return foodResponse;
     }
@@ -230,6 +239,7 @@ public class FoodServiceImpl implements FoodService {
 
         FoodResponse foodResponse = modelMapper.map(savedFood, FoodResponse.class);
         foodResponse.setRestaurantId(savedFood.getRestaurant().getId());
+        foodResponse.setRestaurantName(food.getRestaurant().getName());
 
         return foodResponse;
     }

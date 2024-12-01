@@ -23,5 +23,6 @@ public class FoodResponse {
     boolean isSeasonal;
     Category category;
     Long restaurantId;
+    String restaurantName;
     List<IngredientItemDto> ingredients;
 }
