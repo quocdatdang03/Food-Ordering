@@ -156,7 +156,6 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderResponse getOrderResponse(Order order) {
         OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
-        orderResponse.setCustomerId(order.getCustomer().getId());
         orderResponse.setRestaurantId(order.getRestaurant().getId());
         List<OrderItemResponse> orderItemResponses = order.getOrderItems().stream().map((item) -> {
 

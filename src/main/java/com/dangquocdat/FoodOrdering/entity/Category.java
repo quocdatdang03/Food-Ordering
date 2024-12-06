@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,5 +28,7 @@ public class Category {
     @JoinColumn(name = "restaurant_id")
     Restaurant restaurant;
 
-
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL)
+    List<Food> foods;
 }

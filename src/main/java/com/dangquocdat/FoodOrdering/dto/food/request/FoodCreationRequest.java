@@ -1,9 +1,6 @@
 package com.dangquocdat.FoodOrdering.dto.food.request;
 
-import com.dangquocdat.FoodOrdering.dto.category.CategoryDto;
 import com.dangquocdat.FoodOrdering.dto.ingredient.IngredientItemDto;
-import com.dangquocdat.FoodOrdering.entity.Category;
-import com.dangquocdat.FoodOrdering.entity.IngredientsItem;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

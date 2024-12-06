@@ -1,5 +1,6 @@
 package com.dangquocdat.FoodOrdering.dto.order.response;
 
+import com.dangquocdat.FoodOrdering.dto.user.UserDto;
 import com.dangquocdat.FoodOrdering.entity.Address;
 import com.dangquocdat.FoodOrdering.entity.OrderItem;
 import lombok.*;
@@ -21,7 +22,7 @@ public class OrderResponse {
     double totalPrice;
     String orderStatus;
     Address deliveryAddress;
-    Long customerId;
+    UserDto customer;
     Long restaurantId;
     List<OrderItemResponse> orderItems;
 }

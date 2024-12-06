@@ -2,10 +2,12 @@ package com.dangquocdat.FoodOrdering.service.impl;
 
 import com.dangquocdat.FoodOrdering.dto.food.request.FoodCreationRequest;
 import com.dangquocdat.FoodOrdering.dto.food.response.FoodResponse;
+import com.dangquocdat.FoodOrdering.dto.user.UserDto;
 import com.dangquocdat.FoodOrdering.entity.Category;
 import com.dangquocdat.FoodOrdering.entity.Food;
 import com.dangquocdat.FoodOrdering.entity.IngredientsItem;
 import com.dangquocdat.FoodOrdering.entity.Restaurant;
+import com.dangquocdat.FoodOrdering.exception.ApiException;
 import com.dangquocdat.FoodOrdering.exception.ResourceNotFoundException;
 import com.dangquocdat.FoodOrdering.repository.CategoryRepository;
 import com.dangquocdat.FoodOrdering.repository.FoodRepository;
@@ -13,6 +15,7 @@ import com.dangquocdat.FoodOrdering.repository.RestaurantRepository;
 import com.dangquocdat.FoodOrdering.service.FoodService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -46,8 +49,8 @@ public class FoodServiceImpl implements FoodService {
         food.setPrice(foodCreationRequest.getPrice());
         food.setImages(foodCreationRequest.getImages());
         food.setAvailable(foodCreationRequest.isAvailable());
-        food.setVegetarian(food.isVegetarian());
-        food.setSeasonal(food.isSeasonal());
+        food.setVegetarian(foodCreationRequest.isVegetarian());
+        food.setSeasonal(foodCreationRequest.isSeasonal());
         food.setCategory(category);
         food.setRestaurant(restaurant);
 
@@ -127,7 +130,7 @@ public class FoodServiceImpl implements FoodService {
 
     // This food will appear in DB but depend on any restaurants
     @Override
-    public String deleteFoodFromRestaurant(Long foodId) {
+    public String  deleteFoodFromRestaurant(Long foodId) {
 
         Food food = foodRepository.findById(foodId)
                         .orElseThrow(() -> new ResourceNotFoundException("Food is not exists with given id: "+foodId));
@@ -211,6 +214,27 @@ public class FoodServiceImpl implements FoodService {
 
             return foodResponse;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public FoodResponse findFoodOfCurrentRestaurantById(Long foodId, UserDto userDto) {
+
+        Restaurant restaurant = restaurantRepository.findByOwnerId(userDto.getId())
+                                    .orElseThrow(() -> new ResourceNotFoundException("Restaurant is not exists with given owner id: "+userDto.getId()));
+
+        Food food = foodRepository.findById(foodId)
+                .orElseThrow(() -> new ResourceNotFoundException("Food is not exists with given id: "+foodId));
+
+        if(restaurant.getFoods().contains(food))
+        {
+            FoodResponse foodResponse = modelMapper.map(food, FoodResponse.class);
+            foodResponse.setRestaurantId(food.getRestaurant().getId());
+            foodResponse.setRestaurantName(food.getRestaurant().getName());
+
+            return foodResponse;
+        }
+        else
+            throw new ApiException(HttpStatus.BAD_REQUEST, "There are not any food with given id: "+foodId);
     }
 
     @Override

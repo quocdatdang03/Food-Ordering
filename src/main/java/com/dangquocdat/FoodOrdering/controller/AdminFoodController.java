@@ -43,6 +43,17 @@ public class AdminFoodController {
         return ResponseEntity.ok(foodService.updateFood(foodId, foodCreationRequest));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<FoodResponse> getFoodById(
+            @RequestHeader("Authorization") String jwtToken,
+            @PathVariable("id") Long foodId
+    )
+    {
+        UserDto userDto = getUserDtoByJwtToken(jwtToken);
+
+        return ResponseEntity.ok(foodService.findFoodOfCurrentRestaurantById(foodId, userDto));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteFood(
             @RequestHeader("Authorization") String jwtToken,

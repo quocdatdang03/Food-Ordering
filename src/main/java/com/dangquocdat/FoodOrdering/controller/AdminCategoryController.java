@@ -62,6 +62,18 @@ public class AdminCategoryController {
         return ResponseEntity.ok(categoryService.getCategoriesByRestaurantId(restaurantId));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCategoryById(
+            @PathVariable("id") Long categoryId,
+            @RequestHeader("Authorization") String jwtToken
+    ) {
+
+        UserDto userDto = getUserDtoByJwtToken(jwtToken);
+
+        return ResponseEntity.ok(categoryService.deleteCategory(categoryId));
+    }
+
+
     private UserDto getUserDtoByJwtToken(String jwtToken) {
 
         String onlyToken = jwtToken.substring(7);
@@ -69,5 +81,6 @@ public class AdminCategoryController {
 
         return userDto;
     }
+
 
 }

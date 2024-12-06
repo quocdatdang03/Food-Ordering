@@ -2,6 +2,7 @@ package com.dangquocdat.FoodOrdering.service;
 
 import com.dangquocdat.FoodOrdering.dto.food.request.FoodCreationRequest;
 import com.dangquocdat.FoodOrdering.dto.food.response.FoodResponse;
+import com.dangquocdat.FoodOrdering.dto.user.UserDto;
 
 import java.util.List;
 
@@ -21,6 +22,9 @@ public interface FoodService {
     );
 
     List<FoodResponse> searchFood(String keyword);
+
+    // ADMIN
+    FoodResponse findFoodOfCurrentRestaurantById(Long foodId, UserDto userDto);
 
     FoodResponse findFoodById(Long foodId);
 

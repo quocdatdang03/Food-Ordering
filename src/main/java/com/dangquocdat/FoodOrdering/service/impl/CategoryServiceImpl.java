@@ -68,4 +68,15 @@ public class CategoryServiceImpl implements CategoryService {
             return categoryDto;
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public String deleteCategory(Long categoryId) {
+
+        Category category = categoryRepository.findById(categoryId)
+                                .orElseThrow(() -> new ResourceNotFoundException(("Category is not exists with given id: "+categoryId)));
+
+        categoryRepository.deleteById(categoryId);
+
+        return "Delete category successfully!";
+    }
 }
