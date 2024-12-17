@@ -154,6 +154,15 @@ public class OrderServiceImpl implements OrderService {
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public OrderResponse getOrderByOrderIdAndRestaurantId(Long orderId, Long restaurantId) {
+
+        Order order = orderRepository.findByIdAndRestaurantId(orderId, restaurantId)
+                        .orElseThrow(() -> new ResourceNotFoundException(("Order is not exists with given id: "+orderId+" or  restaurant id: "+restaurantId)));
+
+        return getOrderResponse(order);
+    }
+
     private OrderResponse getOrderResponse(Order order) {
         OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
         orderResponse.setRestaurantId(order.getRestaurant().getId());

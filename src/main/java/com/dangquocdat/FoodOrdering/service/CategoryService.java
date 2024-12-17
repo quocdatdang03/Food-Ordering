@@ -11,8 +11,11 @@ public interface CategoryService {
 
     CategoryDto getCategoryById(Long categoryId);
 
+    CategoryDto updateCategory(Long categoryId, CategoryDto categoryRequest);
+
     List<CategoryDto> getCategoriesByRestaurantId(Long restaurantId);
 
     String deleteCategory(Long categoryId);
+
 
 }

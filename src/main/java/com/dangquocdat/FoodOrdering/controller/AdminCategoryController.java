@@ -9,6 +9,7 @@ import com.dangquocdat.FoodOrdering.service.CategoryService;
 import com.dangquocdat.FoodOrdering.service.RestaurantService;
 import com.dangquocdat.FoodOrdering.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,17 @@ public class AdminCategoryController {
         UserDto userDto = getUserDtoByJwtToken(jwtToken);
 
         return ResponseEntity.ok(categoryService.getCategoryById(categoryId));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryDto> updateCategory(
+            @RequestHeader("Authorization") String jwtToken,
+            @PathVariable("id") Long categoryId,
+            @RequestBody CategoryDto categoryDto
+    ) {
+        UserDto userDto = getUserDtoByJwtToken(jwtToken);
+
+        return ResponseEntity.ok(categoryService.updateCategory(categoryId, categoryDto));
     }
 
     // XEM XÉT LẠI ENDPOINT NÀY TRONG CASE của Customer

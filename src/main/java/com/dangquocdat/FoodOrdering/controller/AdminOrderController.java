@@ -30,6 +30,18 @@ public class AdminOrderController {
         return ResponseEntity.ok(orderService.getRestaurantOrders(restaurantId, orderStatus));
     }
 
+    @GetMapping("/{orderId}/restaurant/{restaurantId}")
+    public ResponseEntity<OrderResponse> getOrderDetailOfRestaurant(
+            @RequestHeader("Authorization") String jwtToken,
+            @PathVariable("orderId") Long orderId,
+            @PathVariable("restaurantId") Long restaurantId
+    ) {
+
+        UserDto userDto = getUserDtoByJwtToken(jwtToken);
+
+        return ResponseEntity.ok(orderService.getOrderByOrderIdAndRestaurantId(orderId, restaurantId));
+    }
+
     @PatchMapping("/{orderId}/{orderStatus}")
     public ResponseEntity<OrderResponse> updateOrderStatus(
             @RequestHeader("Authorization") String jwtToken,
