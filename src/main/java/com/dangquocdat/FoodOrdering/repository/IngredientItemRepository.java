@@ -1,5 +1,6 @@
 package com.dangquocdat.FoodOrdering.repository;
 
+import com.dangquocdat.FoodOrdering.entity.IngredientCategory;
 import com.dangquocdat.FoodOrdering.entity.IngredientsItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,4 +11,5 @@ public interface IngredientItemRepository extends JpaRepository<IngredientsItem,
 
     Optional<List<IngredientsItem>> findByRestaurantId(Long restaurantId);
 
+    Optional<IngredientsItem> findByIdAndRestaurantId(Long ingredientItemId, Long restaurantId);
 }

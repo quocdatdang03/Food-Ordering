@@ -8,4 +8,6 @@ import java.util.*;
 public interface IngredientCategoryRepository extends JpaRepository<IngredientCategory, Long> {
 
     Optional<List<IngredientCategory>> findByRestaurantId(Long restaurantId);
+
+    Optional<IngredientCategory> findByIdAndRestaurantId(Long ingredientCategoryId, Long restaurantId);
 }

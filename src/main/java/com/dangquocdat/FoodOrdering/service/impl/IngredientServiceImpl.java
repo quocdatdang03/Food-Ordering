@@ -4,6 +4,7 @@ import com.dangquocdat.FoodOrdering.dto.ingredient.IngredientCategoryDto;
 import com.dangquocdat.FoodOrdering.dto.ingredient.IngredientItemDto;
 import com.dangquocdat.FoodOrdering.dto.ingredient.request.IngredientCategoryCreationRequest;
 import com.dangquocdat.FoodOrdering.dto.ingredient.request.IngredientItemCreationRequest;
+import com.dangquocdat.FoodOrdering.dto.user.UserDto;
 import com.dangquocdat.FoodOrdering.entity.IngredientCategory;
 import com.dangquocdat.FoodOrdering.entity.IngredientsItem;
 import com.dangquocdat.FoodOrdering.entity.Restaurant;
@@ -54,6 +55,73 @@ public class IngredientServiceImpl implements IngredientService {
                                                    .orElseThrow(() -> new ResourceNotFoundException("Ingredient Category is not exists with given id: "+id));
 
         return modelMapper.map(ingredientCategory, IngredientCategoryDto.class);
+    }
+
+    @Override
+    public IngredientCategoryDto getIngredientCategoryByIdAndRestaurantId(Long id, UserDto userDto) {
+        Restaurant restaurant = restaurantRepository.findByOwnerId(userDto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant is not exists with given owner id: "+userDto.getId()));
+
+        IngredientCategory ingredientCategory = ingredientCategoryRepository.findByIdAndRestaurantId(id, restaurant.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Ingredient Category is not exists with given id: "+id+" and restaurant id: "+restaurant.getId()));
+
+        return modelMapper.map(ingredientCategory, IngredientCategoryDto.class);
+    }
+
+
+    @Override
+    public IngredientItemDto getIngredientByIdAndRestaurantId(Long id, UserDto userDto) {
+
+        Restaurant restaurant = restaurantRepository.findByOwnerId(userDto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant is not exists with given owner id: "+userDto.getId()));
+
+        IngredientsItem ingredientsItem = ingredientItemRepository.findByIdAndRestaurantId(id, restaurant.getId())
+                                                .orElseThrow(() -> new ResourceNotFoundException("Ingredient item is not exists with given id: "+id+" and restaurant id: "+restaurant.getId()));
+
+        return modelMapper.map(ingredientsItem, IngredientItemDto.class);
+    }
+
+    @Override
+    public IngredientCategoryDto updateIngredientCategoryByIdAndRestaurantId(Long ingredientCategoryId, IngredientCategoryCreationRequest ingredientCategoryUpdateRequest, UserDto userDto) {
+
+        Restaurant restaurant = restaurantRepository.findByOwnerId(userDto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant is not exists with given owner id: "+userDto.getId()));
+
+        IngredientCategory ingredientCategory = ingredientCategoryRepository.findByIdAndRestaurantId(ingredientCategoryId, restaurant.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Ingredient Category is not exists with given id: "+ingredientCategoryId+" and restaurant id: "+restaurant.getId()));
+
+
+        if(ingredientCategoryUpdateRequest.getName()!=null)
+            ingredientCategory.setName(ingredientCategoryUpdateRequest.getName());
+
+        IngredientCategory updatedIngredientCategory = ingredientCategoryRepository.save(ingredientCategory);
+
+        return modelMapper.map(ingredientCategory, IngredientCategoryDto.class);
+    }
+
+    @Override
+    public IngredientItemDto updateIngredientItemByIdAndRestaurantId(Long ingredientItemId, IngredientItemCreationRequest ingredientItemUpdateRequest, UserDto userDto) {
+
+        Restaurant restaurant = restaurantRepository.findByOwnerId(userDto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant is not exists with given owner id: "+userDto.getId()));
+
+        IngredientsItem ingredientsItem = ingredientItemRepository.findByIdAndRestaurantId(ingredientItemId, restaurant.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Ingredient item is not exists with given id: "+ingredientItemId+" and restaurant id: "+restaurant.getId()));
+
+        if(ingredientItemUpdateRequest.getName()!=null)
+            ingredientsItem.setName(ingredientItemUpdateRequest.getName());
+
+        if(ingredientItemUpdateRequest.getCategoryId()!=null)
+        {
+            IngredientCategory ingredientCategory = ingredientCategoryRepository.findById(ingredientItemUpdateRequest.getCategoryId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Ingredient Category is not exists with given id: "+ingredientItemUpdateRequest.getCategoryId()));
+
+            ingredientsItem.setCategory(ingredientCategory);
+        }
+
+        IngredientsItem updatedIngredientItem = ingredientItemRepository.save(ingredientsItem);
+
+        return modelMapper.map(updatedIngredientItem, IngredientItemDto.class);
     }
 
     @Override
