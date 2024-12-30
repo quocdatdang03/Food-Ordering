@@ -1,16 +1,20 @@
 package com.dangquocdat.FoodOrdering.service.impl;
 
 import com.dangquocdat.FoodOrdering.dto.auth.request.LoginRequest;
+import com.dangquocdat.FoodOrdering.dto.auth.request.RefreshTokenRequest;
 import com.dangquocdat.FoodOrdering.dto.auth.request.RegistrationRequest;
 import com.dangquocdat.FoodOrdering.dto.auth.response.AuthResponse;
 import com.dangquocdat.FoodOrdering.entity.Cart;
+import com.dangquocdat.FoodOrdering.entity.RefreshToken;
 import com.dangquocdat.FoodOrdering.entity.User;
 import com.dangquocdat.FoodOrdering.enums.UserRoleEnum;
 import com.dangquocdat.FoodOrdering.exception.ApiException;
 import com.dangquocdat.FoodOrdering.repository.CartRepository;
+import com.dangquocdat.FoodOrdering.repository.RefreshTokenRepository;
 import com.dangquocdat.FoodOrdering.repository.UserRepository;
 import com.dangquocdat.FoodOrdering.security.jwt.JwtTokenProvider;
 import com.dangquocdat.FoodOrdering.service.AuthService;
+import com.dangquocdat.FoodOrdering.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import java.util.Optional;
 
@@ -31,6 +36,8 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
+    private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
 
     @Override
@@ -98,11 +105,44 @@ public class AuthServiceImpl implements AuthService {
         if(userFromDB.isPresent())
             role = userFromDB.get().getRole().name();
 
+        // check if refresh token of current user is already existed in DB -> delete refreshToken
+        if(refreshTokenService.checkExistedRefreshToken(userFromDB.get()))
+        {
+            // delete refreshToken from DB
+            refreshTokenRepository.deleteByUserId(userFromDB.get().getId());
+        }
+
+        // create refreshToken:
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(loginRequest.getEmail());
+
         AuthResponse authResponse = new AuthResponse();
         authResponse.setMessage("User Logged-In Successfully!");
         authResponse.setRole(role);
         authResponse.setAccessToken(jwtToken);
+        authResponse.setRefreshToken(refreshToken.getToken());
 
         return authResponse;
     }
+
+    @Override
+    public AuthResponse refreshJwtToken(RefreshTokenRequest refreshTokenRequest) {
+
+       return refreshTokenRepository.findByToken(refreshTokenRequest.getRefreshToken())
+                                    .map(refreshToken -> refreshTokenService.verifyExpirationOfToken(refreshToken)) // verify expiration of token
+                                    .map(refreshToken -> refreshToken.getUser()) // get User info by refresh Token
+                                    .map(user -> {
+                                        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                                                user.getEmail(), user.getPassword()
+                                        );
+                                        String accessToken = jwtTokenProvider.generateToken(authentication);
+
+                                        AuthResponse authResponse = new AuthResponse();
+                                        authResponse.setAccessToken(accessToken);
+                                        authResponse.setRefreshToken(refreshTokenRequest.getRefreshToken());
+
+                                        return authResponse;
+                                    }).orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Refresh token is invalid!"));
+    }
+
+
 }

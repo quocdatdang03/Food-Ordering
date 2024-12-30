@@ -21,30 +21,24 @@ public class RestaurantController {
 
     @GetMapping
     public ResponseEntity<List<RestaurantResponse>> getAllRestaurants(
-            @RequestHeader("Authorization") String jwtToken
     ) {
 
-        UserDto userDto = getUserDtoByJwtToken(jwtToken);
 
         return ResponseEntity.ok(restaurantService.getAllRestaurants());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RestaurantResponse> getRestaurantById(
-            @PathVariable("id") Long restaurantId,
-            @RequestHeader("Authorization") String jwtToken
+            @PathVariable("id") Long restaurantId
     ) {
-        UserDto userDto = getUserDtoByJwtToken(jwtToken);
 
         return ResponseEntity.ok(restaurantService.getRestaurantById(restaurantId));
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<RestaurantResponse>> searchRestaurant(
-            @RequestParam("keyword") String keyword,
-            @RequestHeader("Authorization") String jwtToken
+            @RequestParam("keyword") String keyword
     ) {
-        UserDto userDto = getUserDtoByJwtToken(jwtToken);
 
         return ResponseEntity.ok(restaurantService.searchRestaurant(keyword));
     }

@@ -1,4 +1,4 @@
-package com.dangquocdat.FoodOrdering.dto.auth.response;
+package com.dangquocdat.FoodOrdering.dto.auth.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,11 +8,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthResponse {
+public class RefreshTokenRequest {
 
-    String accessToken;
     String refreshToken;
-    String message;
-    String tokenType = "Bearer";
-    String role;
 }
+

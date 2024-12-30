@@ -1,6 +1,7 @@
 package com.dangquocdat.FoodOrdering.security.jwt;
 
 
+import com.dangquocdat.FoodOrdering.exception.ApiException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 // Execute before Executing Spring Security Filters
 // Validate the JWT token and Provides user details to Spring Security for Authentication
@@ -32,31 +34,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        // get JWT token from HTTP request
-        String jwtToken = getTokenFromRequest(request);
+        try{
+            // get JWT token from HTTP request
+            String jwtToken = getTokenFromRequest(request);
 
-        // Validate token
-        if(StringUtils.hasText(jwtToken) && jwtTokenProvider.validateToken(jwtToken)) {
+            // Validate token
+            if(StringUtils.hasText(jwtToken) && jwtTokenProvider.validateToken(jwtToken)) {
 
-            // get username from token
-            String username = jwtTokenProvider.getUsername(jwtToken);
+                // get username from token
+                String username = jwtTokenProvider.getUsername(jwtToken);
 
-            // get user object from DB by username
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                // get user object from DB by username
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities()
-            );
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
 
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-            // Lưu thông tin của authentication để dùng cho những request tiếp theo trong phiên Session mà không cần bắt login lại
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                // Lưu thông tin của authentication để dùng cho những request tiếp theo trong phiên Session mà không cần bắt login lại
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+
+            filterChain.doFilter(request, response);
         }
-
-        filterChain.doFilter(request, response);
+        catch (ApiException ex) {
+            response.setStatus(ex.getHttpStatus().value());
+            response.setContentType("application/json");
+            response.getWriter().write("{\"timestamp\":\"" + LocalDateTime.now() + "\", \"message\":\"" + ex.getMessage() + "\"}");
+            return; // Stop filter chain processing
+        }
 
     }
 

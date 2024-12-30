@@ -1,14 +1,18 @@
 package com.dangquocdat.FoodOrdering.security.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import com.dangquocdat.FoodOrdering.exception.ApiException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.security.Key;
+import java.security.PublicKey;
 import java.util.Date;
 
 @Component
@@ -62,11 +66,50 @@ public class JwtTokenProvider {
     // Validate JWT token
     public boolean validateToken(String token) {
 
-        Jwts.parser()
+        /*Jwts.parser()
                 .setSigningKey(key())
                 .build()
-                .parse(token);
+                .parse(token);*/
+        try {
+            Jwts.parser()
+                    .verifyWith((SecretKey) key())
+                    .build()
+                    .parseSignedClaims(token);
 
-        return true;
+            return getExpiredDate(token).after(new Date());
+        }
+        catch(MalformedJwtException ex) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "Invalid jwt token");
+        }
+        catch(ExpiredJwtException ex) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "Expired jwt token");
+        }
+        catch(UnsupportedJwtException ex) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "Unsupported jwt token");
+        }
+        catch(IllegalArgumentException ex) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "Jwt claims string is empty");
+        }
+    }
+
+    public Date getExpiredDate(long expiredTime) {
+        Date currentDate = new Date();
+        return new Date(currentDate.getTime()+expiredTime);
+    }
+
+    public Date getExpiredDate(String token) {
+        Claims claims = getClaims(token);
+        return claims.getExpiration();
+    }
+
+    public Claims getClaims(String token) {
+
+        Claims claims = Jwts.parser()
+                            .verifyWith((SecretKey) key())
+                            .build()
+                            .parseSignedClaims(token)
+                            .getPayload();
+
+        return claims;
     }
 }

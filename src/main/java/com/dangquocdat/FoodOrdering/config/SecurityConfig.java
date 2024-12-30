@@ -36,6 +36,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/api/admin/**").hasAnyRole("RESTAURANT_OWNER", "ADMIN");
                     authorize.requestMatchers("/api/auth/**").permitAll();
+                    authorize.requestMatchers("/api/restaurants/*/favorites").authenticated();
+                    authorize.requestMatchers("/api/restaurants/**", "/api/categories/**", "/api/foods/**").permitAll();
                     authorize.requestMatchers("/api/**").authenticated();
                     authorize.anyRequest().permitAll();
                 })

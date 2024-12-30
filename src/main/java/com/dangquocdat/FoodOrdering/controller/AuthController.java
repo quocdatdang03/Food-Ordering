@@ -2,6 +2,7 @@ package com.dangquocdat.FoodOrdering.controller;
 
 
 import com.dangquocdat.FoodOrdering.dto.auth.request.LoginRequest;
+import com.dangquocdat.FoodOrdering.dto.auth.request.RefreshTokenRequest;
 import com.dangquocdat.FoodOrdering.dto.auth.request.RegistrationRequest;
 import com.dangquocdat.FoodOrdering.dto.auth.response.AuthResponse;
 import com.dangquocdat.FoodOrdering.service.AuthService;
@@ -33,5 +34,13 @@ public class AuthController {
 
         return ResponseEntity
                 .ok(authService.login(loginRequest));
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity<AuthResponse> refreshToken(
+            @RequestBody RefreshTokenRequest refreshTokenRequest
+    ) {
+
+        return ResponseEntity.ok(authService.refreshJwtToken(refreshTokenRequest));
     }
 }

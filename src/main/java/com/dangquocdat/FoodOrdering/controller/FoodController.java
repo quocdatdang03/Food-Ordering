@@ -22,18 +22,14 @@ public class FoodController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FoodResponse> getFoodById(
-            @RequestHeader("Authorization") String jwtToken,
             @PathVariable("id") Long foodId
     )
     {
-        UserDto userDto = getUserDtoByJwtToken(jwtToken);
-
         return ResponseEntity.ok(foodService.findFoodById(foodId));
     }
 
     @GetMapping("/restaurant/{restaurantId}")
     public ResponseEntity<List<FoodResponse>> filterFoodOfRestaurant(
-            @RequestHeader(value = "Authorization", required = false) String jwtToken,
             @PathVariable(value = "restaurantId", required = false) Long restaurantId,
             @RequestParam(value = "isVegetarian", required = false) boolean isVegetarian,
             @RequestParam(value = "isNonVegetarian", required = false) boolean isNonVegetarian,
@@ -41,8 +37,6 @@ public class FoodController {
             @RequestParam(value="foodCategory", required = false) String foodCategory
     )
     {
-        UserDto userDto = getUserDtoByJwtToken(jwtToken);
-
         return ResponseEntity.ok(
                 foodService.filterRestaurantsFood(restaurantId, isVegetarian, isNonVegetarian, isSeasonal, foodCategory)
         );
@@ -50,11 +44,9 @@ public class FoodController {
 
     @GetMapping("/search")
     public ResponseEntity<List<FoodResponse>> searchFoodByKeyword(
-            @RequestHeader("Authorization") String jwtToken,
             @RequestParam("keyword") String keyword
     )
     {
-        UserDto userDto = getUserDtoByJwtToken(jwtToken);
 
         return ResponseEntity.ok(foodService.searchFood(keyword));
     }
