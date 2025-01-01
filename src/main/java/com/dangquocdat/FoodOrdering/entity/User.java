@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,12 @@ public class User {
     String password;
 
     UserRoleEnum role = UserRoleEnum.ROLE_CUSTOMER;
+
+    String verificationCode;
+
+    LocalDateTime verificationCodeExpiredAt;
+
+    boolean enable;
 
     @JsonIgnore // whenever fetching user we don't need to include orders
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
