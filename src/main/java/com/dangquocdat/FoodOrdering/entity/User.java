@@ -41,6 +41,10 @@ public class User {
 
     boolean enable;
 
+    String resetPasswordTicket;
+
+    LocalDateTime resetPasswordTicketExpiredAt;
+
     @JsonIgnore // whenever fetching user we don't need to include orders
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     List<Order> orders = new ArrayList<>();

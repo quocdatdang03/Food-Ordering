@@ -173,6 +173,11 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         User user = modelMapper.map(userDto, User.class);
         user.setPassword(userPasswordInDB);
+        user.setEnable(userInDB.isEnable());
+        user.setVerificationCode(userInDB.getVerificationCode());
+        user.setVerificationCodeExpiredAt(userInDB.getVerificationCodeExpiredAt());
+        user.setResetPasswordTicket(userInDB.getResetPasswordTicket());
+        user.setResetPasswordTicketExpiredAt(userInDB.getResetPasswordTicketExpiredAt());
 
         return user;
     }

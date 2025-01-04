@@ -15,7 +15,7 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
 
     @Override
-    public void sendVerificationEmail(String to, String subject, String content) throws MessagingException {
+    public void sendEmail(String to, String subject, String content) throws MessagingException {
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -26,4 +26,5 @@ public class EmailServiceImpl implements EmailService {
 
         javaMailSender.send(message);
     }
+
 }

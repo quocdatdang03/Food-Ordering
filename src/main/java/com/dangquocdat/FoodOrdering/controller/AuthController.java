@@ -2,10 +2,9 @@ package com.dangquocdat.FoodOrdering.controller;
 
 
 import com.dangquocdat.FoodOrdering.dto.auth.VerifyUserDto;
-import com.dangquocdat.FoodOrdering.dto.auth.request.LoginRequest;
-import com.dangquocdat.FoodOrdering.dto.auth.request.RefreshTokenRequest;
-import com.dangquocdat.FoodOrdering.dto.auth.request.RegistrationRequest;
+import com.dangquocdat.FoodOrdering.dto.auth.request.*;
 import com.dangquocdat.FoodOrdering.dto.auth.response.AuthResponse;
+import com.dangquocdat.FoodOrdering.dto.auth.response.ResetPasswordResponse;
 import com.dangquocdat.FoodOrdering.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -54,5 +53,23 @@ public class AuthController {
 
         authService.resendVerificationCode(email);
         return ResponseEntity.ok("Verification code has been sent");
+    }
+
+    @PostMapping("/forgotPassword")
+    public ResponseEntity<String> sendResetPasswordEmail(@RequestParam("email") String email) {
+
+        return ResponseEntity.ok(authService.sendEmailResetPassword(email));
+    }
+
+    @PostMapping("/resetPassword")
+    public ResponseEntity<ResetPasswordResponse> verifyResetPasswordInfo(@RequestBody ResetPasswordInfoRequest request) {
+
+        return ResponseEntity.ok(authService.getUserResetPasswordInfo(request));
+    }
+
+    @PutMapping("/resetPassword")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+
+        return ResponseEntity.ok(authService.resetPassword(resetPasswordRequest));
     }
 }

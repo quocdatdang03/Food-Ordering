@@ -1,10 +1,9 @@
 package com.dangquocdat.FoodOrdering.service.impl;
 
 import com.dangquocdat.FoodOrdering.dto.auth.VerifyUserDto;
-import com.dangquocdat.FoodOrdering.dto.auth.request.LoginRequest;
-import com.dangquocdat.FoodOrdering.dto.auth.request.RefreshTokenRequest;
-import com.dangquocdat.FoodOrdering.dto.auth.request.RegistrationRequest;
+import com.dangquocdat.FoodOrdering.dto.auth.request.*;
 import com.dangquocdat.FoodOrdering.dto.auth.response.AuthResponse;
+import com.dangquocdat.FoodOrdering.dto.auth.response.ResetPasswordResponse;
 import com.dangquocdat.FoodOrdering.entity.Cart;
 import com.dangquocdat.FoodOrdering.entity.RefreshToken;
 import com.dangquocdat.FoodOrdering.entity.User;
@@ -33,6 +32,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -219,7 +219,7 @@ public class AuthServiceImpl implements AuthService {
                 + "</html>";
 
         try {
-            emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
+            emailService.sendEmail(user.getEmail(), subject, htmlMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -233,5 +233,85 @@ public class AuthServiceImpl implements AuthService {
         return String.valueOf(verificationCode);
     }
 
+    @Override
+    public String sendEmailResetPassword(String email) {
+
+        User user = userRepository.findByEmail(email)
+                                    .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "User is not exist with given email: "+email));
+
+        String resetPasswordTicket = generateResetPasswordTicket();
+
+        user.setResetPasswordTicket(resetPasswordTicket);
+        user.setResetPasswordTicketExpiredAt(LocalDateTime.now().plusMinutes(2));
+
+        userRepository.save(user);
+
+        String subject = "Reset Your Password";
+        String resetPasswordLink = "http://localhost:5173/account/reset-password?email="+email+"&ticket="+resetPasswordTicket;
+        String htmlMessage = "<html>"
+                + "<body>"
+                + "<h1>Reset Password</h1>"
+                + "<p>Click the button below to reset your password.</p>"
+                + "<a href=\"" + resetPasswordLink + "\" target=\"_blank\" style=\"display: inline-block; padding: 10px 20px; font-size: 16px; color: #fff; background-color: #007bff; text-decoration: none; border-radius: 5px;\">Reset Password</a>"
+                + "</body>"
+                + "</html>";
+
+        try {
+            emailService.sendEmail(email, subject, htmlMessage);
+        }
+        catch(MessagingException e) {
+            e.printStackTrace();
+        }
+        return "Please check your email to set new password to your account";
+    }
+
+    // for veriry reset password info:
+    @Override
+    public ResetPasswordResponse getUserResetPasswordInfo(ResetPasswordInfoRequest request) {
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "UserNotFound"));
+
+        if(!user.getResetPasswordTicket().equals(request.getResetPasswordTicket()))
+            throw new ApiException(HttpStatus.BAD_REQUEST, "InvalidResetPasswordTicket");
+
+        if(user.getResetPasswordTicketExpiredAt().isBefore(LocalDateTime.now()))
+            throw new ApiException(HttpStatus.BAD_REQUEST, "ExpiredResetPasswordTicket");
+
+        ResetPasswordResponse response = new ResetPasswordResponse();
+        response.setEmail(user.getEmail());
+        response.setResetPasswordTicket(user.getResetPasswordTicket());
+
+        return response;
+    }
+
+    @Override
+    public String resetPassword(ResetPasswordRequest resetPasswordRequest) {
+
+        User user = userRepository.findByEmail(resetPasswordRequest.getEmail())
+                        .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST,"User is not exists with given email: "+resetPasswordRequest.getEmail()));
+
+        if(user.getResetPasswordTicketExpiredAt().isBefore(LocalDateTime.now()))
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Reset password link has expired. Please send a new email to reset password.");
+
+        // check if old password matches with new password -> throw error
+        if(passwordEncoder.matches(resetPasswordRequest.getNewPassword(), user.getPassword()))
+            throw new ApiException(HttpStatus.BAD_REQUEST, "New password cannot be the same as the old password");
+
+
+        String encodedPassword = passwordEncoder.encode(resetPasswordRequest.getNewPassword());
+        user.setPassword(encodedPassword);
+        user.setResetPasswordTicket(null);
+        user.setResetPasswordTicketExpiredAt(null);
+
+        userRepository.save(user);
+
+        return "Reset password successfully.";
+    }
+
+    private String generateResetPasswordTicket() {
+
+        return UUID.randomUUID().toString();
+    }
 
 }
